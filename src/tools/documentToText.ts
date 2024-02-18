@@ -1,5 +1,5 @@
 import * as mammoth from 'mammoth';
-import * as fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import * as pdfParse from 'pdf-parse';
 
 export default async function documentToText(url: string) {
@@ -38,8 +38,9 @@ async function pdfToText(buffer: any) {
  * 获取文件名称和后缀
  */
 function getFileNameAndSuffix(response: Response) {
-  const disposition = response.headers.get('content-disposition');
-  const contentType = response.headers.get('content-type');
+  let disposition = response.headers.get('content-disposition');
+  let contentType = response.headers.get('content-type');
+
   // MIME类型到文件扩展名的映射表
   const extensionMap = {
     'application/pdf': 'pdf',
@@ -52,11 +53,18 @@ function getFileNameAndSuffix(response: Response) {
     'application/zip': 'zip',
   };
   if (!disposition) {
+    if (Array.isArray(contentType)) {
+      contentType = contentType[0];
+    }
     // @ts-ignore
     let suffix = extensionMap[contentType] || '.unknown';
     return { fileName: '', suffix: suffix };
   }
-  const fileName = disposition.split('filename=')[1];
+  if (Array.isArray(disposition)) {
+    disposition = disposition[0];
+  }
+  // @ts-ignore
+  const fileName = disposition.split('filename=')[1].replace(/"/g, '');
   const suffix = fileName.split('.').pop();
   return { fileName, suffix };
 }
