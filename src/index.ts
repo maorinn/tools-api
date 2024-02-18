@@ -11,6 +11,7 @@ app.get('/', (c) => {
 
 app.post('/documentToText', async (c) => {
   const { fileUrl } = await c.req.json();
+  console.log('fileUrl->>>', fileUrl);
   return c.json({
     code: 0,
     data: await documentToText(fileUrl),
