@@ -81,6 +81,31 @@ export async function illegalCheck(searchKey: string) {
 }
 
 /**
+ * 裁判文书核查
+ */
+export async function judgmentDocCheck(searchKey: string) {
+  let timespan = Math.round(Date.now() / 1000);
+  // @ts-ignore
+  let token = getToken(
+    process.env.QCC_KEY,
+    timespan,
+    process.env.QCC_SECRET_KEY
+  );
+  let url = `https://api.qichacha.com/JudgmentDocCheck/GetList?key=${process.env.QCC_KEY}&searchKey=${searchKey}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    // @ts-ignore
+    headers: {
+      Token: token,
+      Timespan: timespan,
+    },
+  });
+  const data = await response.json();
+  const { Result } = data;
+  return Result.Data || [];
+}
+
+/**
  * 获取token
  * Md5(key+Timespan+SecretKey) 加密的32位大写字符串
  */
