@@ -21,18 +21,20 @@ app.post('/documentToText', async (c) => {
 
 // 失信核查
 app.get('/qcc/dishonestCheck', async (c) => {
-  const { searchKey } = await c.req.json();
+  const searchKey = c.req.query('searchKey');
   return c.json({
     code: 0,
+    // @ts-ignore
     data: await dishonestCheck(searchKey),
   });
 });
 
 // 经营异常核查
 app.get('/qcc/abnormalCheck', async (c) => {
-  const { searchKey } = await c.req.json();
+  const searchKey = c.req.query('searchKey');
   return c.json({
     code: 0,
+    // @ts-ignore
     data: await abnormalCheck(searchKey),
   });
 });
