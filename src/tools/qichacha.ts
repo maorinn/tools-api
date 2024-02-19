@@ -74,6 +74,8 @@ export async function illegalCheck(searchKey: string) {
   console.log(3333, response);
 
   const data = await response.json();
+  console.log(66666, data);
+
   const { Result } = data;
   return Result.Data || [];
 }
