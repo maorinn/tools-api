@@ -23,7 +23,7 @@ export async function dishonestCheck(searchKey: string) {
   });
   const data = await response.json();
   const { Result } = data;
-  return Result.data || [];
+  return Result.Data || [];
 }
 
 /**
@@ -48,7 +48,7 @@ export async function abnormalCheck(searchKey: string) {
   });
   const data = await response.json();
   const { Result } = data;
-  return Result.data || [];
+  return Result.Data || [];
 }
 
 /**
