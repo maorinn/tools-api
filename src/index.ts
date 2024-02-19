@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import 'dotenv/config';
 import documentToText from './tools/documentToText';
+import { abnormalCheck, dishonestCheck } from './tools/qichacha';
 
 const app = new Hono();
 
@@ -15,6 +16,24 @@ app.post('/documentToText', async (c) => {
   return c.json({
     code: 0,
     data: await documentToText(fileUrl),
+  });
+});
+
+// 失信核查
+app.get('/qcc/dishonestCheck', async (c) => {
+  const { searchKey } = await c.req.json();
+  return c.json({
+    code: 0,
+    data: await dishonestCheck(searchKey),
+  });
+});
+
+// 经营异常核查
+app.get('/qcc/abnormalCheck', async (c) => {
+  const { searchKey } = await c.req.json();
+  return c.json({
+    code: 0,
+    data: await abnormalCheck(searchKey),
   });
 });
 

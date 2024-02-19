@@ -1,0 +1,60 @@
+import { CryptoUtil } from '../utils/crypto';
+import fetch from 'node-fetch';
+
+/**
+ * 失信核查
+ */
+export async function dishonestCheck(searchKey: string) {
+  let timespan = Math.round(Date.now() / 1000);
+  // @ts-ignore
+  let token = getToken(
+    process.env.QCC_KEY,
+    timespan,
+    process.env.QCC_SECRET_KEY
+  );
+  let url = `https://api.qichacha.com/ShixinCheck/GetList?key=${process.env.QCC_KEY}&searchKey=${searchKey}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    // @ts-ignore
+    headers: {
+      Token: token,
+      Timespan: timespan,
+    },
+  });
+  const data = await response.json();
+  const { Result } = data;
+  return Result.data || [];
+}
+
+/**
+ * 经营异常核查
+ */
+export async function abnormalCheck(searchKey: string) {
+  let timespan = Math.round(Date.now() / 1000);
+  // @ts-ignore
+  let token = getToken(
+    process.env.QCC_KEY,
+    timespan,
+    process.env.QCC_SECRET_KEY
+  );
+  let url = `https://api.qichacha.com/ExceptionCheck/GetList?key=${process.env.QCC_KEY}&searchKey=${searchKey}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    // @ts-ignore
+    headers: {
+      Token: token,
+      Timespan: timespan,
+    },
+  });
+  const data = await response.json();
+  const { Result } = data;
+  return Result.data || [];
+}
+
+/**
+ * 获取token
+ * Md5(key+Timespan+SecretKey) 加密的32位大写字符串
+ */
+function getToken(key: any, timespan: number, secretKey: any) {
+  return CryptoUtil.hashing(key + timespan + secretKey).toUpperCase();
+}
