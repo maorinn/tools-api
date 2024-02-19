@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import 'dotenv/config';
 import documentToText from './tools/documentToText';
-import { abnormalCheck, dishonestCheck } from './tools/qichacha';
+import { abnormalCheck, dishonestCheck, illegalCheck } from './tools/qichacha';
 
 const app = new Hono();
 
@@ -36,6 +36,16 @@ app.get('/qcc/abnormalCheck', async (c) => {
     code: 0,
     // @ts-ignore
     data: await abnormalCheck(searchKey),
+  });
+});
+
+// 严重违法核查
+app.get('/qcc/illegalCheck', async (c) => {
+  const searchKey = c.req.query('searchKey');
+  return c.json({
+    code: 0,
+    // @ts-ignore
+    data: await illegalCheck(searchKey),
   });
 });
 
